@@ -95,7 +95,12 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.Header)
+	if _, ok := r.Header["Content-Type"]; ok {
+		v := r.Header.Get("Content-Type")
+		log.Printf("inherit Content-Type %s", v)
+		req.Header.Set("Content-Type", v)
+	}
 	req.Header.Set("X-Amz-Date", time.Now().UTC().Format(aws.ISO8601BasicFormat))
 
 	h.Signer.Sign(req)
