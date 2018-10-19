@@ -95,6 +95,7 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
 	req.Header.Set("X-Amz-Date", time.Now().UTC().Format(aws.ISO8601BasicFormat))
 
 	h.Signer.Sign(req)
